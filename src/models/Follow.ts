@@ -22,4 +22,7 @@ const followSchema = new Schema<IFollow>(
   { timestamps: true }
 );
 
-export default mongoose.models.Follow || mongoose.model<IFollow>("Follow", followSchema)
+followSchema.index({ followerId: 1, followingId: 1 }, { unique: true });
+
+export default mongoose.models.Follow ||
+  mongoose.model<IFollow>("Follow", followSchema);
