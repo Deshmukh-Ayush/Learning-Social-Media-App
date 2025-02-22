@@ -53,3 +53,5 @@ async function dbConnect(): Promise<Connection> {
 }
 
 export default dbConnect;
+
+// https://www.youtube.com/watch?v=ief7saY7JBI
