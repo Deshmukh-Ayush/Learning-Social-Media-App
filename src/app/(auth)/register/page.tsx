@@ -1,14 +1,50 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import { toast } from "sonner";
+import axios from "axios"
+import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      
+    const [username, setUsername] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const router = useRouter()
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+
+
+    if(!username || !fullName || !email || !password || !confirmPassword) {
+      toast("All the fields as required");
+    }
+
+    if(password !== confirmPassword) {
+      toast("Confirm Password Error", {
+        description: "Password does not match confirm password"
+      })
+      return;
+    }
+
+    try {
+      const res = await axios.post("/api/register", {
+        username, fullName, email, password
+      }, {headers: {"Content-Type": "application/json"}});
+
+      toast("Registration successful! Please log in.")
+      router.push("/login")
+    } catch (error) {
+      toast("Registration Failed",{
+        description: `${error}`
+      })
+    }
+
   };
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -24,20 +60,31 @@ export default function Register() {
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <Label htmlFor="username">Username</Label>
-            <Input id="username" placeholder="Tyler" type="text" />
+            <Input id="username" placeholder="Tyler" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="name">Full Name</Label>
-            <Input id="Name" placeholder="Durden" type="text" />
+            <Input id="Name" placeholder="Durden" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input id="email" placeholder="projectmayhem@fc.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+        </LabelInputContainer>
+        <LabelInputContainer className="mb-8">
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Input
+            id="caonfirmPassword"
+            placeholder="••••••••"
+            type="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
         </LabelInputContainer>
 
         <button
