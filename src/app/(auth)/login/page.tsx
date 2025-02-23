@@ -1,14 +1,38 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import { toast } from "sonner";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    if (!email || !password) {
+      toast("Email and password are required");
+    }
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      toast("Error Logging In", {
+        description: `${result.error}`,
+      });
+    } else {
+      toast("Login Successfull");
+      router.push("/");
+    }
   };
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -16,18 +40,30 @@ export default function Register() {
         Welcome back to Social Media Application
       </h2>
       <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Login to Social Media Application. <br />or Create and account if you don't have one
+        Login to Social Media Application. <br />
+        or Create and account if you don't have one
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>
-        
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input
+            id="email"
+            placeholder="projectmayhem@fc.com"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input
+            id="password"
+            placeholder="••••••••"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </LabelInputContainer>
 
         <button
