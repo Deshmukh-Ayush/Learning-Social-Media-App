@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password, username, fullName } = await req.json();
 
-    if (!email || !password) {
+    if (!email || !password || !username || !fullName) {
       return NextResponse.json(
         { error: "Please enter a valid email and password" },
         { status: 400 }
