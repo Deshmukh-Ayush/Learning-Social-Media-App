@@ -37,6 +37,8 @@ export default function Register() {
         username, fullName, email, password
       }, {headers: {"Content-Type": "application/json"}});
 
+      console.log(res)
+
       toast("Registration successful! Please log in.")
       router.push("/login")
     } catch (error) {
