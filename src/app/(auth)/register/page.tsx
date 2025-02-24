@@ -3,79 +3,136 @@ import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
+import {
+  IconBrandGithub,
+  IconBrandGoogle,
+  IconSquareRoundedX,
+} from "@tabler/icons-react";
 import { toast } from "sonner";
-import axios from "axios"
+import axios from "axios";
 import { useRouter } from "next/navigation";
+import { MultiStepLoader as Loader } from "@/components/ui/multi-step-loader";
+
+const loadingStates = [
+  { text: "Validating information" },
+  { text: "Securing your data" },
+  { text: "Creating account" },
+  { text: "Setting up profile" },
+  { text: "Finalizing registration" },
+];
 
 export default function Register() {
-      
-    const [username, setUsername] = useState("");
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const router = useRouter()
+  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-
-    if(!username || !fullName || !email || !password || !confirmPassword) {
+    if (!username || !fullName || !email || !password || !confirmPassword) {
       toast("All the fields as required");
     }
 
-    if(password !== confirmPassword) {
+    if (password !== confirmPassword) {
       toast("Confirm Password Error", {
-        description: "Password does not match confirm password"
-      })
+        description: "Password does not match confirm password",
+      });
       return;
     }
 
     try {
-      const res = await axios.post("/api/register", {
-        username, fullName, email, password
-      }, {headers: {"Content-Type": "application/json"}});
+      setLoading(true);
+      const res = await axios.post(
+        "/api/register",
+        {
+          username,
+          fullName,
+          email,
+          password,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-      console.log(res)
+      console.log(res);
 
-      toast("Registration successful! Please log in.")
-      router.push("/login")
+      toast("Registration successful! Please log in.");
+      router.push("/login");
     } catch (error) {
-      toast("Registration Failed",{
-        description: `${error}`
-      })
+      toast("Registration Failed", {
+        description: `${error}`,
+      });
+    } finally {
+      setLoading(false);
     }
-
   };
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black relative">
+      <Loader loadingStates={loadingStates} loading={loading} duration={2000} />
+      {loading && (
+        <button
+          className="fixed top-4 right-4 text-black dark:text-white z-[120]"
+          onClick={() => setLoading(false)}
+        >
+          <IconSquareRoundedX className="h-10 w-10" />
+        </button>
+      )}
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
         Welcome to Social Media Application
       </h2>
       <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Create an account. or Login if you already have one
-        yet
+        Create an account. or Login if you already have one yet
       </p>
 
       <form className="my-8" onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <Label htmlFor="username">Username</Label>
-            <Input id="username" placeholder="Tyler" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+            <Input
+              id="username"
+              placeholder="Tyler"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="name">Full Name</Label>
-            <Input id="Name" placeholder="Durden" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+            <Input
+              id="Name"
+              placeholder="Durden"
+              type="text"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              required
+            />
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <Input
+            id="email"
+            placeholder="projectmayhem@fc.com"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required/>
+          <Input
+            id="password"
+            placeholder="••••••••"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
           <Label htmlFor="confirmPassword">Confirm Password</Label>
