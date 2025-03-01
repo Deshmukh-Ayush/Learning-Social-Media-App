@@ -22,7 +22,7 @@ export default withAuth(
         const { pathname } = req.nextUrl;
         
         // Public routes
-        const publicPaths = ["/login", "/register", "/api/register"];
+        const publicPaths = ["/login", "/register", "/api/register", "/api/imagekit-auth"];
         if (publicPaths.includes(pathname) || pathname.startsWith("/api/auth")) {
           return true;
         }
