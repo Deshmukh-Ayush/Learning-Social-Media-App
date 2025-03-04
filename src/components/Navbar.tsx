@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
+import LogOutButton from "./LogoutButton";
 
 export function NavbarDemo() {
   return (
@@ -62,6 +63,8 @@ function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/enterprise">Enterprise</HoveredLink>
           </div>
         </MenuItem>
+            <LogOutButton />
+
       </Menu>
     </div>
   );
