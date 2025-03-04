@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
         port: "",
       },
     ],
+    domains: ['assets.aceternity.com'],
   }
 };
 
