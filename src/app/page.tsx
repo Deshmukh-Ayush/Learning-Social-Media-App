@@ -1,3 +1,5 @@
+"use client"
+
 import LogOutButton from "@/components/LogoutButton"
 
 

@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import { ImageKitProvider } from "imagekitio-next";
 import axios from "axios";
