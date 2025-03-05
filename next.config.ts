@@ -10,8 +10,8 @@ const nextConfig: NextConfig = {
         port: "",
       },
     ],
-    domains: ['assets.aceternity.com'],
-  }
+    domains: ["assets.aceternity.com"],
+  },
 };
 
 export default nextConfig;
