@@ -20,8 +20,9 @@ const UserSchema = new Schema<IUser>(
     password: { type: String, required: true },
     username: { type: String, required: true },
     fullName: { type: String },
-    followers: { type: Number },
-    following: { type: Number },
+    followers: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+    following: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+    postCount: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
@@ -35,6 +36,5 @@ UserSchema.pre("save", async function (next) {
 });
 
 const User = models?.User || model<IUser>("User", UserSchema);
-
 
 export default User;
