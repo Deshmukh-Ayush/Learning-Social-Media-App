@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import React from 'react'
+import { Metadata } from "next";
+import PostComponent from "@/components/PostComponent";
 
-const page = () => {
+export const metadata: Metadata = {
+  title: "Create Post",
+  description: "Create a new post",
+};
+
+export default function CreatePostPage() {
   return (
-    <div>page</div>
-  )
+    <div className="container max-w-4xl py-8">
+      <PostComponent />
+    </div>
+  );
 }
-
-export default page
